@@ -16,6 +16,6 @@ get lyrics from Genius and display in terminal
 git clone git@github.com:wdog/cmus_lyrics.git
 cd cmus_lyrics
 python -m venv venv
-pip install -r requirements.txx
+pip install -r requirements.txt
 ./cmus_lyrics.py
 ```
