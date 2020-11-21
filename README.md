@@ -7,3 +7,5 @@ get lyrics from Genius and display in terminal
 
 * generate GENIUS API token and fill settings.json copying from
 * secret.example.json
+
+

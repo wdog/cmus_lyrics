@@ -30,5 +30,3 @@ class CmusPlayer:
 
     def get_tags(self):
         self.tags = stagger.read_tag(self.file_path)
-
-
