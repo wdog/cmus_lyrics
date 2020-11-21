@@ -9,3 +9,13 @@ get lyrics from Genius and display in terminal
 * secret.example.json
 
 
+# USAGE
+
+
+```bash
+git clone git@github.com:wdog/cmus_lyrics.git
+cd cmus_lyrics
+python -m venv venv
+pip install -r requirements.txx
+./cmus_lyrics.py
+```
