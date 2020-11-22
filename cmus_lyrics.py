@@ -37,7 +37,7 @@ class Main:
 
     def create_folders_is_not_exists(self, fld):
         if (not os.path.exists(fld) and not os.path.isfile(fld)):
-            os.mkdirs(fld)
+            os.makedirs(fld)
 
     # +------------------------------------------+
     # | check if lyrics file really exists on fs |
