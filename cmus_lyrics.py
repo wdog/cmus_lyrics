@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
-from cmus import CmusPlayer
+from cmus_player import CmusPlayer
 from settings import Settings
 from lyrics import Lyrics
 import os
 import sys
 import subprocess
-import re
 import argparse
 
 
