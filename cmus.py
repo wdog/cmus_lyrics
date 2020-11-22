@@ -8,7 +8,7 @@ class CmusPlayer:
 
     def __init__(self):
         if (self.is_cmus_playing):
-            self.get_file_path()
+            self.get_fullpath_current_song()
 
     def get_current(self):
         pass
@@ -21,7 +21,7 @@ class CmusPlayer:
             return True
         return False
 
-    def get_file_path(self):
+    def get_fullpath_current_song(self):
         cmd = "cmus-remote -Q|grep file|awk '{$1=\"\"; print $0}'"
         self.file_path = os.popen(cmd).read().strip()
 
@@ -30,3 +30,4 @@ class CmusPlayer:
 
     def get_tags(self):
         self.tags = stagger.read_tag(self.file_path)
+        return self.tags
