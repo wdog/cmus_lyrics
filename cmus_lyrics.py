@@ -2,23 +2,11 @@
 
 from cmus import CmusPlayer
 from settings import Settings
-import lyricsgenius
+from lyrics import Lyrics
 import os
 import sys
-
-
-class Lyrics(lyricsgenius.Genius):
-    def __init__(self, args):
-        super().__init__(args['client_access_token'])
-
-    def get_lyrics(self, artist=None, title=None):
-        if artist is not None and title is not None:
-            song = self.search_song(title, artist)
-            if song is not None:
-                self.lyrics = song.lyrics
-            else:
-                self.lyrics = None
-        return self.lyrics
+import subprocess
+import re
 
 
 class Main:
@@ -28,16 +16,66 @@ class Main:
         if (self.cms.is_cmus_playing()):
             self.cms.get_tags()
 
+    def print_lyrics(self):
+        subprocess.call(["less", self.lyrics_file])
+
+    # +------------------------------------------------------+
+    # | set the file path and name removing not alpha chars  |
+    # +------------------------------------------------------+
+
+    def set_file(self, path='/tmp'):
+        tags = self.cms.tags
+
+        if (not os.path.exists(path) and not os.path.isfile(path)):
+            os.mkdir(path)
+
+        # minimize artist name
+        artist_folder = re.sub('[\W]+', '', tags.artist) .lower()
+        artist_folder = os.path.join(path, artist_folder)
+        if (not os.path.exists(artist_folder) and not
+                os.path.isfile(artist_folder)):
+            os.mkdir(artist_folder)
+
+        # minimize file name
+        self.lyrics_file_name = re.sub('[\W]+', '', tags.title) \
+                                  .lower() + ".txt"
+        self.lyrics_file = os.path.join(path, artist_folder, self.lyrics_file_name)
+        return self.lyrics_file
+
+    # +------------------------------------------+
+    # | check if lyrics file really exists on fs |
+    # +------------------------------------------+
+
+    def file_save_exists(self):
+        if os.path.isfile(self.lyrics_file):
+            return True
+        return False
+
+    # +-----------------------+
+    # | save the lyrics to fs |
+    # +-----------------------+
+
+    def file_write(self, lyrics):
+        print(self.lyrics_file)
+        with open(self.lyrics_file, 'w') as fo:
+            fo.write(lyrics)
+
+    def get_lyrics(self, lyrics):
+        print('-- new')
+        tags = self.cms.tags
+        lyrics_text = lyrics.get_lyrics(tags.artist, tags.title)
+        main.file_write(lyrics_text)
+
 
 if __name__ == '__main__':
     cm = CmusPlayer()
+    if not cm.is_cmus_playing():
+        sys.exit()
 
     # TODO
     # arguments like:
     # - credential file
-    # - destination folder for lyrics (same as song or generic)
-    # save lyrics to folder + format
-    # read lyrics if exists
+    # - retry if NOT FOUND
 
     try:
         s = Settings()
@@ -48,12 +86,11 @@ if __name__ == '__main__':
         sys.exit(e)
 
     main = Main(cm)
+
     if (main.cms.is_cmus_playing()):
-        tags = main.cms.tags
-        lyrics_text = lyrics.get_lyrics(tags.artist, tags.title)
+        main.set_file('/tmp/lyrics/')
 
-    """ print lyrics """
-    with open("/tmp/cml.txt", "w") as fo:
-        fo.write(lyrics_text)
+        if not main.file_save_exists():
+            main.get_lyrics(lyrics)
 
-    os.system("less /tmp/cml.txt")
+    main.print_lyrics()
