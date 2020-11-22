@@ -1,3 +1,6 @@
+
+![CodeQL](https://github.com/wdog/cmus_lyrics/workflows/CodeQL/badge.svg)
+
 # CMUS_LYRICS
 
 get lyrics from Genius and display in terminal
