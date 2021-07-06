@@ -6,4 +6,4 @@ lyricsgenius==2.0.2
 requests==2.25.0
 soupsieve==2.0.1
 stagger==1.0.0
-urllib3==1.26.4
+urllib3==1.26.5
